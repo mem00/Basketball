@@ -1,0 +1,7 @@
+#court {
+    width:500px;
+    height:500px;
+    display: block;
+    border: 1px solid black;
+    margin: 50px auto;
+}

@@ -1,6 +1,8 @@
 let canvas = document.createElement("canvas");
 let ctx = canvas.getContext("2d");
 
+let submit = document.querySelector("#reset");
+
 
 
 
@@ -110,7 +112,7 @@ function renderCourt() {
     ball.draw();
 }
 
-
+let moveInterval;
 canvas.addEventListener("click", function() {
     let eventX = event.layerX;
     let eventY = event.layerY; 
@@ -131,7 +133,7 @@ canvas.addEventListener("click", function() {
        if(eventX > left && eventX <= straight){
            dx = 0;     
        }
-        setInterval(moveBall, 10);    
+         moveInterval = setInterval(moveBall, 10);    
     };
 
 });
@@ -139,8 +141,8 @@ canvas.addEventListener("click", function() {
 
 
 function moveBall(){
-    console.log(ball.offsetX, ball.offsetY, ball.startX, ball.startY, canvasWidth)
-    console.log(event)
+    //console.log(ball.offsetX, ball.offsetY, ball.startX, ball.startY, canvasWidth)
+    //console.log(event)
     if(ball.x >= canvasWidth) {
         dx =  0 - dx;
     }
@@ -159,9 +161,20 @@ function moveBall(){
     ball.x += dx;
     ball.y += dy;
     ball.draw();
+
+
+
 }   
 
 
 
 renderCourt();
 
+submit.addEventListener("click", function(){
+    console.log('reset')
+    clearInterval(moveInterval);
+    ctx.clearRect(0,0, canvasWidth, canvasHeight);
+    ball.x = ballX;
+    ball.y = ballY;
+    renderCourt();  
+})

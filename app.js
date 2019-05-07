@@ -41,6 +41,8 @@ class Court {
 
 class Hoop {
         constructor(x, y, width) { 
+            this.x = x;
+            this.y = y;
             let ctx = canvas.getContext("2d");
             ctx.strokeStyle = "red";
             ctx.lineWidth = 3;
@@ -52,6 +54,8 @@ class Hoop {
 
 class Backboard {
         constructor(x, y, width, height) {
+            this.x = x;
+            this.y = y;
             let ctx = canvas.getContext("2d");
             ctx.strokeStyle = "black";
             ctx.lineWidth = 1;
@@ -61,6 +65,8 @@ class Backboard {
 
 class Ball {
         constructor(x, y, radius) {
+            this.x = x;
+            this.y = y;
             let ctx = canvas.getContext("2d");
             ctx.fillStyle = "orange";
             ctx.beginPath();
@@ -70,7 +76,6 @@ class Ball {
             ctx.fill();
         }
     }
-
 
 
 playGame();

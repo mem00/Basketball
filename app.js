@@ -1,4 +1,5 @@
 let canvas = document.createElement("canvas");
+let ctx = canvas.getContext("2d");
 
 let width = window.innerWidth;
 let height = window.innerWidth;
@@ -17,11 +18,11 @@ let backboardHeight = width/10;
 
 let ballX = width/8;
 let ballY = height - (height*.70);
-let ballRad = width/40
+let ballRad = width/40;
 
 
 
-function playGame() {
+function renderCourt() {
     let court = new Court(canvasWidth, canvasHeight);
     let hoop = new Hoop(rimX, rimY, rimLength);
     let backboard = new Backboard(backboardX, backboardY, backboardWidth, backboardHeight);
@@ -43,7 +44,6 @@ class Hoop {
         constructor(x, y, width) { 
             this.x = x;
             this.y = y;
-            let ctx = canvas.getContext("2d");
             ctx.strokeStyle = "red";
             ctx.lineWidth = 3;
             ctx.moveTo(x, y);
@@ -56,7 +56,6 @@ class Backboard {
         constructor(x, y, width, height) {
             this.x = x;
             this.y = y;
-            let ctx = canvas.getContext("2d");
             ctx.strokeStyle = "black";
             ctx.lineWidth = 1;
             ctx.strokeRect(x, y, width, height);
@@ -67,7 +66,6 @@ class Ball {
         constructor(x, y, radius) {
             this.x = x;
             this.y = y;
-            let ctx = canvas.getContext("2d");
             ctx.fillStyle = "orange";
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -78,4 +76,4 @@ class Ball {
     }
 
 
-playGame();
+renderCourt();

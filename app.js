@@ -24,11 +24,14 @@ let backboardHeight = width/10;
 let ballX = width/8;
 let ballY = height - (height*.70);
 let ballRad = width/40;
+//console.log(ballRad)
 let startAngle = 0;
 let endAngle = Math.PI * 2;
 
 let dx = 10;
 let dy = -10;
+
+let gravity = 1;
 
 
 class Court {
@@ -119,7 +122,7 @@ canvas.addEventListener("click", function() {
 
     let ballDirection = (ball.offsetX - ball.startX)/3;
 
-    let left = ball.startX + ballDirection
+    let left = ball.startX + ballDirection;
     let straight = ball.startX + ballDirection*2;
     
 
@@ -146,24 +149,28 @@ function moveBall(){
     if(ball.x >= canvasWidth) {
         dx =  0 - dx;
     }
-    if(ball.y>= canvasWidth) {
-        dy = 0 - dy;
+    if(ball.y >= canvasWidth) {
+        dy = 0 - dy; 
     }
     if(ball.x <= 0) {
         dx = Math.abs(dx);
     }
+    if(ball.y <= 40){
+         dy--;
+    }
+    if(ball.y > 40 && ball.y < 100){
+        dy++;
+   }
     if(ball.y <= 0) {
        dy = Math.abs(dy);
     }
+
     ctx.clearRect(0,0, canvasWidth, canvasHeight);
     hoop.draw();
     backboard.draw();
     ball.x += dx;
     ball.y += dy;
-    ball.draw();
-
-
-
+    ball.draw();  
 }   
 
 

@@ -44,6 +44,8 @@ class Hoop {
         constructor(x, y, width) { 
             this.x = x;
             this.y = y;
+            this.offsetX = x + width;
+            this.offsetY = y + 3;
             ctx.strokeStyle = "red";
             ctx.lineWidth = 3;
             ctx.moveTo(x, y);
@@ -56,6 +58,8 @@ class Backboard {
         constructor(x, y, width, height) {
             this.x = x;
             this.y = y;
+            this.offsetX = x + width;
+            this.offsetY = y + height;
             ctx.strokeStyle = "black";
             ctx.lineWidth = 1;
             ctx.strokeRect(x, y, width, height);
@@ -66,6 +70,8 @@ class Ball {
         constructor(x, y, radius) {
             this.x = x;
             this.y = y;
+            this.offsetX = x + radius;
+            this.offsetY = y + radius;
             ctx.fillStyle = "orange";
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, Math.PI * 2);

@@ -1,60 +1,76 @@
 let canvas = document.createElement("canvas");
 
+let width = window.innerWidth;
+let height = window.innerWidth;
+
+let canvasWidth = width/3;
+let canvasHeight = width/3;
+
+let rimX = width/8;
+let rimY = height - (height * .9);
+let rimLength = width/14;
+
+let backboardX = rimX - 100;
+let backboardY = height - (height*.98);
+let backboardWidth = width/5;
+let backboardHeight = width/10;
+
+let ballX = width/8;
+let ballY = height - (height*.70);
+let ballRad = width/40
+
+
+
 function playGame() {
-    let court = new Court;
-    court.start();
-    court.hoop();
-    court.backboard();
-    court.ball();
+    let court = new Court(canvasWidth, canvasHeight);
+    let hoop = new Hoop(rimX, rimY, rimLength);
+    let backboard = new Backboard(backboardX, backboardY, backboardWidth, backboardHeight);
+    let ball = new Ball(ballX, ballY, ballRad);
+    
 }
 
 class Court {
-        start() {  
-            canvas.width = window.innerWidth / 2;
-            canvas.height = window.innerHeight / 2;
+        constructor(width, height) {  
+            canvas.width = width;
+            canvas.height = height;
             canvas.id = "court"
             canvas.context = canvas.getContext("2d");
             document.body.insertBefore(canvas, document.body.childNodes[0]);
         };
-        hoop() {
+}
+
+class Hoop {
+        constructor(x, y, width) { 
             let ctx = canvas.getContext("2d");
             ctx.strokeStyle = "red";
-            ctx.lineWidth = 1;
-            let hoopSize = canvas.width/5;
-            let hoopStart = (canvas.width/5)*2;
-            ctx.moveTo(hoopStart, canvas.height - (canvas.height*.75))
-            ctx.lineTo(hoopStart + hoopSize, canvas.height -(canvas.height*.75));
+            ctx.lineWidth = 3;
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + width, y);
             ctx.stroke();
-        }
-
-        backboard() {
-            let ctx = canvas.getContext("2d");
-            ctx.strokeStyle = "black";
-            let hoopSize = canvas.width/5;
-            let hoopStartX = (canvas.width/5)*2;
-            let hoopStartY = (canvas.height) - canvas.height*.95;
-            ctx.strokeRect(hoopStartX-80, hoopStartY, 270, 70);
-        }
-
-        ball() {
-            let ctx = canvas.getContext("2d");
-            ctx.fillStyle = "orange";
-            let center = canvas.width/2;
-            let bottom = canvas.height - canvas.height/5;
-            let size = canvas.width/20
-            console.log(bottom, size)
-            ctx.beginPath();
-            ctx.arc(center, bottom, size, 0, Math.PI * 2);
-            ctx.closePath();
-            ctx.fill();
-
         }
 }
 
-canvas.addEventListener("click", function (){
-    console.log(event.clientX);
-    console.log(event.clientY);
+class Backboard {
+        constructor(x, y, width, height) {
+            let ctx = canvas.getContext("2d");
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x, y, width, height);
+        }
+    }
 
-})
+class Ball {
+        constructor(x, y, radius) {
+            let ctx = canvas.getContext("2d");
+            ctx.fillStyle = "orange";
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.stroke();
+            ctx.fill();
+        }
+    }
+
+
 
 playGame();

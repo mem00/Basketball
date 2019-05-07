@@ -1,10 +1,12 @@
 let canvas = document.createElement("canvas");
 let ctx = canvas.getContext("2d");
+ctx.restore()
 
 let submit = document.querySelector("#reset");
 
 
-
+let madeBucket = false;
+let score = 0;
 
 let width = window.innerWidth;
 let height = window.innerWidth;
@@ -21,7 +23,7 @@ let backboardY = height - (height*.98);
 let backboardWidth = width/5;
 let backboardHeight = width/10;
 
-let ballX = width/8;
+let ballX = width/8 +10;
 let ballY = height - (height*.70);
 let ballRad = width/40;
 //console.log(ballRad)
@@ -58,6 +60,7 @@ class Hoop {
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.offsetX, this.y);
         ctx.stroke();
+    
     };
 }
 
@@ -134,7 +137,7 @@ canvas.addEventListener("click", function() {
            dx = -20;
        }
        if(eventX > left && eventX <= straight){
-           dx = 0;     
+           dx = 1;     
        }
          moveInterval = setInterval(moveBall, 10);    
     };
@@ -149,22 +152,28 @@ function moveBall(){
     if(ball.x >= canvasWidth) {
         dx =  0 - dx;
     }
-    if(ball.y >= canvasWidth) {
+    else if(ball.y >= canvasWidth) {
         dy = 0 - dy; 
     }
-    if(ball.x <= 0) {
+    else if(ball.x <= 0) {
         dx = Math.abs(dx);
     }
-    if(ball.y <= 40){
-         dy--;
-    }
-    if(ball.y > 40 && ball.y < 100){
-        dy++;
-   }
-    if(ball.y <= 0) {
+   
+    else if(ball.y <= 0) {
        dy = Math.abs(dy);
     }
 
+   if(madeBasket()){
+         alert("bucket");
+    }
+    if(hitRim()) {
+        if(dy < 0){
+            dy= Math.abs(dy)
+        }
+        else {
+            dy= 0-dy;
+        }
+    }
     ctx.clearRect(0,0, canvasWidth, canvasHeight);
     hoop.draw();
     backboard.draw();
@@ -173,6 +182,17 @@ function moveBall(){
     ball.draw();  
 }   
 
+function madeBasket() {
+    console.log(hoop.y, ball.y, dy, ball.x, hoop.x)
+    
+    return (ball.y <  hoop.y+10 && ball.y > hoop.y-10 && dy >= 0 && ball.x >= hoop.x +20 && ball.offsetX <= hoop.offsetX-20) 
+
+}
+
+function hitRim() {
+    return ((ball.y <=  hoop.y+3 && dy >= 0 && ball.x >= hoop.x && ball.x <= hoop.x+10)
+       || (ball.y <=  hoop.y+3 && dy >= 0 && ball.x >= hoop.offsetX - 10 && ball.x <= hoop.offsetX));
+}
 
 
 renderCourt();

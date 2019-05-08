@@ -57,9 +57,11 @@ class Hoop {
     draw() {
         ctx.strokeStyle = "red";
         ctx.lineWidth = 3;
+        ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.offsetX, this.y);
         ctx.stroke();
+        ctx.closePath();
     
     };
 }
@@ -76,7 +78,9 @@ class Backboard {
         draw() {
             ctx.strokeStyle = "black";
             ctx.lineWidth = 1;
+            ctx.beginPath();
             ctx.strokeRect(this.x, this.y, this.width, this.height);
+            ctx.closePath();
         }
 }
 
@@ -105,11 +109,21 @@ class Ball {
 
 }
 
+class Shot {
+    constructor(x,y) {
+        this.x = x;
+        this.y = y;
+    }
+
+}
+
 let court = new Court(canvasWidth, canvasHeight);
 let hoop = new Hoop(rimX, rimY, rimLength);
 let backboard = new Backboard(backboardX, backboardY, backboardWidth, backboardHeight);
 let ball = new Ball(ballX, ballY, ballRad, startAngle, endAngle);
 
+let shotStart = new Shot(0,0);
+let shotEnd = new Shot(0,0);
 
 
 function renderCourt() {
@@ -119,36 +133,45 @@ function renderCourt() {
 }
 
 let moveInterval;
-canvas.addEventListener("click", function() {
-    let eventX = event.layerX;
-    let eventY = event.layerY; 
+canvas.addEventListener("mousedown", function() {
+    console.log(event)
+    shotStart.x = event.layerX;
+    shotStart.y = event.layerX;
 
-    let ballDirection = (ball.offsetX - ball.startX)/3;
 
-    let left = ball.startX + ballDirection;
-    let straight = ball.startX + ballDirection*2;
+    // console.log(event)
+    // let eventX = event.layerX;
+    // let eventY = event.layerY; 
+
+    // let ballDirection = (ball.offsetX - ball.startX)/3;
+
+    // let left = ball.startX + ballDirection;
+    // let straight = ball.startX + ballDirection*2;
     
 
        
-    if((eventX >= ball.startX && eventX <= ball.offsetX) 
-    && (eventY >= ball.startY && eventY <= ball.offsetY)) {
+    // if((eventX >= ball.startX && eventX <= ball.offsetX) 
+    // && (eventY >= ball.startY && eventY <= ball.offsetY)) {
        
-       if(eventX <= left){
-           dx = -20;
-       }
-       if(eventX > left && eventX <= straight){
-           dx = 1;     
-       }
-         moveInterval = setInterval(moveBall, 10);    
-    };
+    //    if(eventX <= left){
+    //        dx = -20;
+    //    }
+    //    if(eventX > left && eventX <= straight){
+    //        dx = 1;     
+    //    }
+    //      moveInterval = setInterval(moveBall, 10);    
+    // };
 
+});
+
+canvas.addEventListener("mouseup", function(){
+    shotEnd.x = event.layerX;
+    shotEnd.y = event.layerY;
 });
 
 
 
 function moveBall(){
-    //console.log(ball.offsetX, ball.offsetY, ball.startX, ball.startY, canvasWidth)
-    //console.log(event)
     if(ball.x >= canvasWidth) {
         dx =  0 - dx;
     }

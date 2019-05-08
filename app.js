@@ -35,8 +35,6 @@ let dy = -10;
 let gravity = 1;
 
 
-
-
 let court = new Court(canvasWidth, canvasHeight);
 let hoop = new Hoop(rimX, rimY, rimLength);
 let backboard = new Backboard(backboardX, backboardY, backboardWidth, backboardHeight);
@@ -44,6 +42,9 @@ let ball = new Ball(ballX, ballY, ballRad, startAngle, endAngle);
 
 let shotStart = new Shot(0,0);
 let shotEnd = new Shot(0,0);
+
+let shotStartBool = false;
+let shotEndBool = false;
 
 
 function renderCourt() {
@@ -54,9 +55,10 @@ function renderCourt() {
 
 let moveInterval;
 canvas.addEventListener("mousedown", function() {
-    console.log(event)
+    //console.log(event)
     shotStart.x = event.layerX;
     shotStart.y = event.layerX;
+    shotStartBool = true;
 
 
     // console.log(event)
@@ -84,10 +86,24 @@ canvas.addEventListener("mousedown", function() {
 
 });
 
+let shotX, shotY
+
 canvas.addEventListener("mouseup", function(){
     shotEnd.x = event.layerX;
     shotEnd.y = event.layerY;
+    shotEndBool = true;
+    if(shotStartBool) {
+        shotX = shotEnd.x - shotStart.x;
+        shotY = shotEnd.y - shotStart.y;
+        shotStartBool = false;
+        shotEndBool = false;
+        console.log("shotX: ", shotX, "  shotY: ", shotY);
+    }
+
+
 });
+
+
 
 
 

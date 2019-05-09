@@ -7,11 +7,10 @@
 body {
     display: block;
     text-align: center;
-}
-
-h1{
     color: orange;
 }
+
+
 #reset{
     padding: 10px;
     border-radius: 10px;

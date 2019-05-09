@@ -99,3 +99,9 @@ let endAngle = Math.PI * 2;
 
     normalizedDeltaX = shotDeltaX + ball.offsetX;
     normalizedDeltaY = shotDeltaY +  ball.offsetY
+
+    function hitTarget() {
+        hitTargetBool = (ball.x >= target.x && ball.x < target.offsetX && ball.y > target.y && ball.y < target.offsetY && dy > 0);
+        console.log(hitTargetBool);
+    };
+    

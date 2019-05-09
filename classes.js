@@ -36,9 +36,11 @@ class Backboard {
         this.height = height;
         }
         draw() {
-            ctx.strokeStyle = "black";
-            ctx.lineWidth = 1;
             ctx.beginPath();
+            ctx.strokeStyle = "black";
+   
+            ctx.lineWidth = 1;
+        
             ctx.strokeRect(this.x, this.y, this.width, this.height);
             ctx.closePath();
         }
@@ -86,9 +88,11 @@ class Shot {
         this.height = height;
     }
     draw() {
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 1;
         ctx.beginPath();
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = "blue";
+        ctx.lineWidth = 2;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
         ctx.strokeRect(this.x, this.y, this.width, this.height);
         ctx.closePath();
     }

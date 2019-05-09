@@ -4,7 +4,7 @@ class Court {
         canvas.height = height;
         canvas.id = "court"
         canvas.context = canvas.getContext("2d");
-        document.body.insertBefore(canvas, document.body.childNodes[0]);
+        document.body.appendChild(canvas);
     }
 }
 
@@ -37,7 +37,7 @@ class Backboard {
         }
         draw() {
             ctx.beginPath();
-            ctx.strokeStyle = "black";
+            ctx.strokeStyle = "white";
    
             ctx.lineWidth = 1;
         
@@ -89,8 +89,8 @@ class Shot {
     }
     draw() {
         ctx.beginPath();
-        ctx.strokeStyle = "black";
-        ctx.fillStyle = "blue";
+        ctx.strokeStyle = "white";
+        ctx.fillStyle = "black";
         ctx.lineWidth = 2;
         ctx.fillRect(this.x, this.y, this.width, this.height);
         ctx.strokeRect(this.x, this.y, this.width, this.height);

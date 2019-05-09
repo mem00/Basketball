@@ -1,19 +1,32 @@
 #court {
     display: block;
     border: 1px solid black;
-    margin: 50px auto;
+    margin: 2px auto;
 }
 
 body {
     display: block;
+    font-family: 'Luckiest Guy', cursive;
     text-align: center;
-    color: orange;
+    color: #191970;
 }
 
+h1 {
+    margin-bottom: 0;
+
+}
+
+p{
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
 #reset{
     padding: 10px;
+    font-size: large;
+    font-family: 'Luckiest Guy', cursive;
     border-radius: 10px;
-    background-color: orange;
+    margin-top: 0;
+    background-color: #191970;
     color: white;
 }

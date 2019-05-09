@@ -61,7 +61,7 @@ function clearCourt() {
 
 function drawScore() {
     ctx.beginPath();
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "white";
     ctx.font = "30px Arial";
     ctx.textAlign = "center";
     ctx.fillText(score, canvasWidth/2, canvasHeight/2);

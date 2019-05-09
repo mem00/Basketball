@@ -1,6 +1,6 @@
 let canvas = document.createElement("canvas");
 let ctx = canvas.getContext("2d");
-ctx.restore()
+
 
 let submit = document.querySelector("#reset");
 
@@ -10,22 +10,21 @@ let score = 0;
 let width = window.innerWidth;
 let height = window.innerWidth;
 
-let canvasWidth = width/3;
-let canvasHeight = width/3;
+let canvasWidth = 600;
+let canvasHeight = 600;
 
-let rimX = width/8;
-let rimY = height - (height * .9);;
-let rimLength = width/14;
+let rimX = 250;
+let rimY = 170;
+let rimLength = 100;
 
-let backboardX = rimX - 100;
-let backboardY = height - (height*.98);
-let backboardWidth = width/5;
-let backboardHeight = width/10;
+let backboardX = 150
+let backboardY = 10;
+let backboardWidth = 300;
+let backboardHeight = 200;
 
-let ballX = width/8 +10;
-let ballY = height - (height*.70);
-let ballRad = width/40;
-//console.log(ballRad)
+let ballX = 300;
+let ballY = 570;
+let ballRad = 30;
 let startAngle = 0;
 let endAngle = Math.PI * 2;
 
@@ -34,11 +33,18 @@ let dy = -10;
 
 let gravity = 1;
 
+console.log(canvasHeight)
+
 
 let court = new Court(canvasWidth, canvasHeight);
 let hoop = new Hoop(rimX, rimY, rimLength);
 let backboard = new Backboard(backboardX, backboardY, backboardWidth, backboardHeight);
 let ball = new Ball(ballX, ballY, ballRad, startAngle, endAngle);
+
+
+console.log("ballX",ball.offsetX)
+console.log("ballY", ball.offsetY)
+
 
 let shotStart = new Shot(0,0);
 let shotEnd = new Shot(0,0);
@@ -55,9 +61,9 @@ function renderCourt() {
 
 let moveInterval;
 canvas.addEventListener("mousedown", function() {
-    //console.log(event)
+    console.log(event.layerX, event.layerY)
     shotStart.x = event.layerX;
-    shotStart.y = event.layerX;
+    shotStart.y = event.layerY;
     shotStartBool = true;
 
 
@@ -86,21 +92,31 @@ canvas.addEventListener("mousedown", function() {
 
 });
 
-let shotX, shotY
+let shotDeltaX, shotDeltaY, shotBool, shotTangent, normalizedDeltaX, normalizedDeltaY
 
 canvas.addEventListener("mouseup", function(){
     shotEnd.x = event.layerX;
     shotEnd.y = event.layerY;
-    shotEndBool = true;
+   
     if(shotStartBool) {
-        shotX = shotEnd.x - shotStart.x;
-        shotY = shotEnd.y - shotStart.y;
+        shotDeltaX = shotEnd.x - shotStart.x;
+        shotDeltaY = shotEnd.y - shotStart.y;
+        normalizedDeltaX = shotDeltaX + ball.offsetX;
+        normalizedDeltaY = shotDeltaY + ball.offsetY;
+
+
+        shotTangent = normalizedDeltaY/normalizedDeltaX;
+        shotInverseTangent = normalizedDeltaX/normalizedDeltaY;
+        shotArcTan = Math.atan(shotTangent);
+
+        console.log(event.layerX, event.layerY)
+        console.log("normalized X", normalizedDeltaX, "normalizedDeltaY",normalizedDeltaY, "shotTangent", shotTangent, "shotInverseTangent", shotInverseTangent, "shot A tan", shotArcTan )
         shotStartBool = false;
-        shotEndBool = false;
-        console.log("shotX: ", shotX, "  shotY: ", shotY);
+        shotBool = true;
+        // console.log("shotDeltaX: ", shotDeltaX, "  shotDeltaY: ", shotDeltaY, canvasWidth, canvasHeight);
+        setInterval(moveBall, 10);
+
     }
-
-
 });
 
 
@@ -108,6 +124,63 @@ canvas.addEventListener("mouseup", function(){
 
 
 function moveBall(){
+    if(shotBool) {
+        shotBool = false;
+    if (shotDeltaY >= 150){
+        dy = -20;
+    }
+    else if (shotDeltaY >= 100){
+        dy = -15;
+    }
+    else if (shotDeltaY >= 50){
+        dy = -10;
+    }
+    else if (shotDeltaY >= 0){
+        dy = -5;
+    }
+    else if (shotDeltaY >= -50){
+        dy = 5;
+    }
+    else if (shotDeltaY >= -100){
+        dy = 10;
+    }
+    else if (shotDeltaY >= -150){
+        dy = 15;
+    }
+    else if (shotDeltaY >= -200){
+        dy = 20;
+    }
+ 
+
+    if (shotDeltaX >= 150){
+        dx = 20;
+    }
+    else if (shotDeltaX >= 100){
+        dx = 15;
+    }
+    else if (shotDeltaX >= 50){
+        dx = 10;
+    }
+    else if (shotDeltaX >= 0){
+        dx = 5;
+    }
+    else if (shotDeltaX >= -50){
+        dx = -5;
+    }
+    else if (shotDeltaX <= -100){
+        dx = -10;
+    }
+    else if (shotDeltaX <= -150){
+        dx = -15;
+    }
+    else if (shotDeltaX <= -200){
+        dx = -20;
+    }
+
+
+}
+    
+
     if(ball.x >= canvasWidth) {
         dx =  0 - dx;
     }
@@ -123,7 +196,7 @@ function moveBall(){
     }
 
    if(madeBasket()){
-         alert("bucket");
+         console.log("bucket");
     }
     if(hitRim()) {
         if(dy < 0){
@@ -139,19 +212,18 @@ function moveBall(){
     ball.x += dx;
     ball.y += dy;
     ball.draw();  
+
+
 }   
 
 function madeBasket() {
-    console.log(hoop.y, ball.y, dy, ball.x, hoop.x)
-    
     return (ball.y <  hoop.y+10 && ball.y > hoop.y-10 && dy >= 0 && ball.x >= hoop.x +20 && ball.offsetX <= hoop.offsetX-20) 
-
-}
+};
 
 function hitRim() {
     return ((ball.y <=  hoop.y+3 && dy >= 0 && ball.x >= hoop.x && ball.x <= hoop.x+10)
        || (ball.y <=  hoop.y+3 && dy >= 0 && ball.x >= hoop.offsetX - 10 && ball.x <= hoop.offsetX));
-}
+};
 
 
 renderCourt();

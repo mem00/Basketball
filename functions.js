@@ -9,7 +9,6 @@ function renderCourt() {
     ball.startY = ball.y - ball.radius;
     ball.offsetY = ball.y + ball.radius;
 
-
     ball.draw();
     target.draw();
     drawScore();
@@ -27,7 +26,7 @@ function reRenderCourt() {
     ball.offsetX = ball.x + ball.radius;
     ball.startY = ball.y - ball.radius;
     ball.offsetY = ball.y + ball.radius;
-    if(ball.startY < hoop.y && dy > 0){
+    if(ball.startY < hoop.y && dy > 0) {
         ctx.globalCompositeOperation = "destination-over";
         ball.draw();  
     }
@@ -81,7 +80,7 @@ function release() {
     if(shotStartBool) {
         shotInfo = shotMath();
         shotStartBool = false;
-        setVelocity(shotInfo)
+        setVelocity(shotInfo);
         moveAnimation = setInterval(moveBall, 10);
     };  
 };
@@ -96,7 +95,6 @@ function shotMath() {
     shotHypoteneuse = Math.sqrt(Math.pow(shotDeltaX,2) + Math.pow(shotDeltaY,2))
     shotAngle = shotDeltaX/shotHypoteneuse;
     shotSin = Math.sin(shotAngle);
-    console.log(shotSin, shotHypoteneuse);
     return([shotSin, shotHypoteneuse]);
 };
 
@@ -107,19 +105,19 @@ function setVelocity(shotInfo) {
     dx = startDx;
     dy = startDy;
 
+    if(!isNaN(direction) && !isNaN(magnitude)) {
+        if(direction < .1 && direction > -.1) {
+            directionGuage= 0;
 
-    if(direction < .1 && direction > -.1) {
-        directionGuage= 0;
+        }
+        else if(direction < 0) {
+            directionGuage = 0-(1 + Math.abs(direction));
+        }
+        else{
 
-    }
-    else if(direction < 0) {
-        directionGuage = 0-(1 + Math.abs(direction));
-    }
-    else{
-
-        directionGuage = 1 +  Math.abs(direction);
-    
-    };
+            directionGuage = 1 +  Math.abs(direction);
+        
+        };
 
         dx = dx * directionGuage ;
 
@@ -127,6 +125,11 @@ function setVelocity(shotInfo) {
 
         dx = dx * magnitudeGuage;
         dy = dy * magnitudeGuage;
+}
+else {
+    dx = 0;
+    dy = 2;
+}
 
 };
 
@@ -148,7 +151,7 @@ function moveBall(){
 
     if(hitRimLeft() || hitRimRight()) {
         dy= 0-dy;
-        console.log("move")
+     
     }
 
     else if(madeBasket()){

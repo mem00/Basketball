@@ -28,23 +28,19 @@ let ballRad = 30;
 let startAngle = 0;
 let endAngle = Math.PI * 2;
 
-let dx = 10;
-let dy = -10;
+let dx = 0;
+let dy = 0;
 
 let gravity = 1;
 
-console.log(canvasHeight)
 
+let shotDeltaX, shotDeltaY, shotBool, shotAngle, normalizedDeltaX, normalizedDeltaY,
+ shotHypoteneuse, shotSin, moveInterval, shotInfo, direction, magnitude, directionGuage, magnitudeGuage
 
 let court = new Court(canvasWidth, canvasHeight);
 let hoop = new Hoop(rimX, rimY, rimLength);
 let backboard = new Backboard(backboardX, backboardY, backboardWidth, backboardHeight);
 let ball = new Ball(ballX, ballY, ballRad, startAngle, endAngle);
-
-
-console.log("ballX",ball.offsetX)
-console.log("ballY", ball.offsetY)
-
 
 let shotStart = new Shot(0,0);
 let shotEnd = new Shot(0,0);
@@ -59,64 +55,85 @@ function renderCourt() {
     ball.draw();
 }
 
-let moveInterval;
+
+function shotMath() {
+    shotEnd.x = event.layerX;
+    shotEnd.y = event.layerY;
+
+    shotDeltaX = shotEnd.x - shotStart.x;
+    shotDeltaY = shotEnd.y - shotStart.y;
+    normalizedDeltaX = shotDeltaX + ball.offsetX;
+    normalizedDeltaY = shotDeltaY +  ball.offsetY;
+
+    shotHypoteneuse = Math.sqrt(Math.pow(shotDeltaX,2) + Math.pow(shotDeltaY,2))
+    shotAngle = shotDeltaX/shotHypoteneuse
+    shotSin = Math.sin(shotAngle);
+    console.log("angle:  ", shotAngle, "hypotenuese: ", shotHypoteneuse);
+    return([shotSin, shotHypoteneuse]);
+}
+
+
+
+
+
+
 canvas.addEventListener("mousedown", function() {
-    console.log(event.layerX, event.layerY)
     shotStart.x = event.layerX;
     shotStart.y = event.layerY;
     shotStartBool = true;
-
-
-    // console.log(event)
-    // let eventX = event.layerX;
-    // let eventY = event.layerY; 
-
-    // let ballDirection = (ball.offsetX - ball.startX)/3;
-
-    // let left = ball.startX + ballDirection;
-    // let straight = ball.startX + ballDirection*2;
-    
-
-       
-    // if((eventX >= ball.startX && eventX <= ball.offsetX) 
-    // && (eventY >= ball.startY && eventY <= ball.offsetY)) {
-       
-    //    if(eventX <= left){
-    //        dx = -20;
-    //    }
-    //    if(eventX > left && eventX <= straight){
-    //        dx = 1;     
-    //    }
-    //      moveInterval = setInterval(moveBall, 10);    
-    // };
-
 });
 
-let shotDeltaX, shotDeltaY, shotBool, shotTangent, normalizedDeltaX, normalizedDeltaY
-
 canvas.addEventListener("mouseup", function(){
-    shotEnd.x = event.layerX;
-    shotEnd.y = event.layerY;
    
     if(shotStartBool) {
-        shotDeltaX = shotEnd.x - shotStart.x;
-        shotDeltaY = shotEnd.y - shotStart.y;
-        normalizedDeltaX = shotDeltaX + ball.offsetX;
-        normalizedDeltaY = shotDeltaY + ball.offsetY;
-
-
-        shotTangent = normalizedDeltaY/normalizedDeltaX;
-        shotInverseTangent = normalizedDeltaX/normalizedDeltaY;
-        shotArcTan = Math.atan(shotTangent);
-
-        console.log(event.layerX, event.layerY)
-        console.log("normalized X", normalizedDeltaX, "normalizedDeltaY",normalizedDeltaY, "shotTangent", shotTangent, "shotInverseTangent", shotInverseTangent, "shot A tan", shotArcTan )
+        shotInfo = shotMath();
+        console.log(shotInfo)
         shotStartBool = false;
         shotBool = true;
-        // console.log("shotDeltaX: ", shotDeltaX, "  shotDeltaY: ", shotDeltaY, canvasWidth, canvasHeight);
+        setVelocity(shotInfo)
+        console.log(dx, dy)
         setInterval(moveBall, 10);
-
     }
+
+
+
+
+function setVelocity(shotInfo) {
+    direction = shotInfo[0];
+    magnitude = shotInfo[1];
+
+    console.log(shotInfo[0], shotInfo[1], direction);
+
+    dx = 5;
+    dy = -5;
+    console.log(dx, dy)
+    console.log(direction)
+
+
+   if(direction < .1 && direction > -.1) {
+        directionGuage= 0;
+        console.log("center")
+    }
+    else if(direction < 0) {
+        directionGuage = 0-(1 + Math.abs(direction));
+    }
+
+    else{
+
+        directionGuage = 1 +  Math.abs(direction);
+    
+    }
+    dx = dx * directionGuage ;
+
+    magnitudeGuage = magnitude/100;
+
+    dx = dx * magnitudeGuage;
+    dy = dy * magnitudeGuage;
+    console.log(dx, dy)
+
+    console.log(dx, dy)
+};
+
 });
 
 
@@ -126,57 +143,6 @@ canvas.addEventListener("mouseup", function(){
 function moveBall(){
     if(shotBool) {
         shotBool = false;
-    if (shotDeltaY >= 150){
-        dy = -20;
-    }
-    else if (shotDeltaY >= 100){
-        dy = -15;
-    }
-    else if (shotDeltaY >= 50){
-        dy = -10;
-    }
-    else if (shotDeltaY >= 0){
-        dy = -5;
-    }
-    else if (shotDeltaY >= -50){
-        dy = 5;
-    }
-    else if (shotDeltaY >= -100){
-        dy = 10;
-    }
-    else if (shotDeltaY >= -150){
-        dy = 15;
-    }
-    else if (shotDeltaY >= -200){
-        dy = 20;
-    }
- 
-
-    if (shotDeltaX >= 150){
-        dx = 20;
-    }
-    else if (shotDeltaX >= 100){
-        dx = 15;
-    }
-    else if (shotDeltaX >= 50){
-        dx = 10;
-    }
-    else if (shotDeltaX >= 0){
-        dx = 5;
-    }
-    else if (shotDeltaX >= -50){
-        dx = -5;
-    }
-    else if (shotDeltaX <= -100){
-        dx = -10;
-    }
-    else if (shotDeltaX <= -150){
-        dx = -15;
-    }
-    else if (shotDeltaX <= -200){
-        dx = -20;
-    }
-
 
 }
     
@@ -226,6 +192,7 @@ function hitRim() {
 };
 
 
+
 renderCourt();
 
 submit.addEventListener("click", function(){
@@ -236,3 +203,5 @@ submit.addEventListener("click", function(){
     ball.y = ballY;
     renderCourt();  
 })
+
+

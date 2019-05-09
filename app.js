@@ -1,8 +1,7 @@
 let canvas = document.createElement("canvas");
 let ctx = canvas.getContext("2d");
 
-
-let submit = document.querySelector("#reset");
+let reset = document.querySelector("#reset");
 
 let madeBucket = false;
 let score = 0;
@@ -28,10 +27,20 @@ let ballRad = 30;
 let startAngle = 0;
 let endAngle = Math.PI * 2;
 
+let targetX = 255;
+let targetY = 95;
+let targetWidth = 90;
+let targetHeight = 70;
+
 let dx = 0;
 let dy = 0;
 
-let gravity = 1;
+
+let highScore = 0;
+
+
+
+let gravity = -1;
 
 
 let shotDeltaX, shotDeltaY, shotBool, shotAngle, normalizedDeltaX, normalizedDeltaY,
@@ -41,20 +50,31 @@ let court = new Court(canvasWidth, canvasHeight);
 let hoop = new Hoop(rimX, rimY, rimLength);
 let backboard = new Backboard(backboardX, backboardY, backboardWidth, backboardHeight);
 let ball = new Ball(ballX, ballY, ballRad, startAngle, endAngle);
-
+let target = new Target(targetX, targetY, targetWidth, targetHeight);
 let shotStart = new Shot(0,0);
 let shotEnd = new Shot(0,0);
 
 let shotStartBool = false;
 let shotEndBool = false;
 
+let hitTargetBool = false;
+let scoreBool = false;
 
 function renderCourt() {
     hoop.draw();
     backboard.draw();
     ball.draw();
+    target.draw();
+    drawScore();
 }
 
+function drawScore() {
+    ctx.beginPath();
+    ctx.font = "30px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(score, canvasWidth/2, canvasHeight/2);
+    ctx.closePath();
+}
 
 function shotMath() {
     shotEnd.x = event.layerX;
@@ -68,51 +88,44 @@ function shotMath() {
     shotHypoteneuse = Math.sqrt(Math.pow(shotDeltaX,2) + Math.pow(shotDeltaY,2))
     shotAngle = shotDeltaX/shotHypoteneuse
     shotSin = Math.sin(shotAngle);
-    console.log("angle:  ", shotAngle, "hypotenuese: ", shotHypoteneuse);
     return([shotSin, shotHypoteneuse]);
 }
 
+canvas.addEventListener("mousedown", grab);
+canvas.addEventListener("mouseup", release);
+canvas.addEventListener("touchstart", grab);
+canvas.addEventListener("touchend", release);
 
-
-
-
-
-canvas.addEventListener("mousedown", function() {
+function grab() {
     shotStart.x = event.layerX;
     shotStart.y = event.layerY;
-    shotStartBool = true;
-});
+    if(shotStart.x >= ball.startX && shotStart.x <= ball.offsetX && shotStart.y >= ball.startY && shotStart.y <= ball.offsetY) {
+        shotStartBool = true; 
+    }
+}
 
-canvas.addEventListener("mouseup", function(){
-   
+function release() {
     if(shotStartBool) {
         shotInfo = shotMath();
-        console.log(shotInfo)
         shotStartBool = false;
         shotBool = true;
         setVelocity(shotInfo)
-        console.log(dx, dy)
-        setInterval(moveBall, 10);
-    }
-
-
-
+        setTimeout(clearCourt, 2000);
+        moveInterval = setInterval(moveBall, 1);
+    }  
+}
 
 function setVelocity(shotInfo) {
     direction = shotInfo[0];
     magnitude = shotInfo[1];
 
-    console.log(shotInfo[0], shotInfo[1], direction);
-
     dx = 5;
     dy = -5;
-    console.log(dx, dy)
-    console.log(direction)
 
 
-   if(direction < .1 && direction > -.1) {
+if(direction < .1 && direction > -.1) {
         directionGuage= 0;
-        console.log("center")
+
     }
     else if(direction < 0) {
         directionGuage = 0-(1 + Math.abs(direction));
@@ -129,24 +142,10 @@ function setVelocity(shotInfo) {
 
     dx = dx * magnitudeGuage;
     dy = dy * magnitudeGuage;
-    console.log(dx, dy)
-
-    console.log(dx, dy)
 };
-
-});
-
-
-
 
 
 function moveBall(){
-    if(shotBool) {
-        shotBool = false;
-
-}
-    
-
     if(ball.x >= canvasWidth) {
         dx =  0 - dx;
     }
@@ -161,29 +160,37 @@ function moveBall(){
        dy = Math.abs(dy);
     }
 
-   if(madeBasket()){
-         console.log("bucket");
-    }
+    hitTarget();
+
     if(hitRim()) {
         if(dy < 0){
-            dy= Math.abs(dy)
+            dy= Math.abs(dy);
         }
         else {
             dy= 0-dy;
         }
     }
+
+    else if(madeBasket()){
+        console.log("bucket");
+        score++;
+        setTimeout(clearCourt, 500);
+   }
     ctx.clearRect(0,0, canvasWidth, canvasHeight);
     hoop.draw();
     backboard.draw();
+    target.draw();
+    drawScore();
     ball.x += dx;
     ball.y += dy;
     ball.draw();  
-
-
 }   
 
+
+
 function madeBasket() {
-    return (ball.y <  hoop.y+10 && ball.y > hoop.y-10 && dy >= 0 && ball.x >= hoop.x +20 && ball.offsetX <= hoop.offsetX-20) 
+    return (hitTargetBool && ball.y >= (hoop.y - ball.radius) && (ball.y < (hoop.y)) && 
+    (dy >= 0) && (ball.startX > hoop.x + 10) && (ball.offsetX < hoop.offsetX-10)) 
 };
 
 function hitRim() {
@@ -191,17 +198,24 @@ function hitRim() {
        || (ball.y <=  hoop.y+3 && dy >= 0 && ball.x >= hoop.offsetX - 10 && ball.x <= hoop.offsetX));
 };
 
+function hitTarget() {
+    hitTargetBool = (ball.x >= target.x && ball.x < target.offsetX && ball.y > target.y && ball.y < target.offsetY && dy > 0);
+    console.log(hitTargetBool)
+}
+
 
 
 renderCourt();
+reset.addEventListener("click", clearCourt);
 
-submit.addEventListener("click", function(){
+
+function clearCourt() {
     console.log('reset')
     clearInterval(moveInterval);
     ctx.clearRect(0,0, canvasWidth, canvasHeight);
     ball.x = ballX;
     ball.y = ballY;
+    dx = 0;
+    dy = 0;
     renderCourt();  
-})
-
-
+}

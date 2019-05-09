@@ -1,17 +1,24 @@
 #court {
     display: block;
-    border: 1px solid black;
+    border: 1px;
     margin: 2px auto;
 }
 
 body {
     display: block;
+    background-image: url(neven-krcmarek-175845-unsplash.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 70%;
+    background-color: black;
+
     font-family: 'Luckiest Guy', cursive;
     text-align: center;
-    color: #191970;
+    color: white;
 }
 
 h1 {
+    margin-top: 0;
     margin-bottom: 0;
 
 }
@@ -27,6 +34,6 @@ p{
     font-family: 'Luckiest Guy', cursive;
     border-radius: 10px;
     margin-top: 0;
-    background-color: #191970;
-    color: white;
+    background-color: white;
+    color: black;
 }

@@ -3,3 +3,18 @@
     border: 1px solid black;
     margin: 50px auto;
 }
+
+body {
+    display: block;
+    text-align: center;
+}
+
+h1{
+    color: orange;
+}
+#reset{
+    padding: 10px;
+    border-radius: 10px;
+    background-color: orange;
+    color: white;
+}

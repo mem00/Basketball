@@ -5,8 +5,7 @@ class Court {
         canvas.id = "court"
         canvas.context = canvas.getContext("2d");
         document.body.insertBefore(canvas, document.body.childNodes[0]);
-
-    };
+    }
 }
 
 class Hoop {
@@ -24,7 +23,6 @@ class Hoop {
         ctx.lineTo(this.offsetX, this.y);
         ctx.stroke();
         ctx.closePath();
-    
     };
 }
 
@@ -76,5 +74,22 @@ class Shot {
         this.x = x;
         this.y = y;
     }
-
 }
+
+ class Target {
+     constructor(x, y, width, height) {
+        this.x = x;
+        this.y = y;
+        this.offsetX = x + width;
+        this.offsetY = y + height;
+        this.width = width;
+        this.height = height;
+    }
+    draw() {
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        ctx.closePath();
+    }
+ }

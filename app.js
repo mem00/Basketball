@@ -3,8 +3,10 @@ let ctx = canvas.getContext("2d");
 
 let reset = document.querySelector("#reset");
 
-let madeBucket = false;
 let score = 0;
+
+let startDx = 3;
+let startDy = -3;
 
 let width = window.innerWidth;
 let height = window.innerWidth;
@@ -37,7 +39,7 @@ let dy = 0;
 
 let highScore = 0;
 
-let shotDeltaX, shotDeltaY, shotBool, shotAngle, shotHypoteneuse, shotSin, moveInterval,
+let shotDeltaX, shotDeltaY, shotAngle, shotHypoteneuse, shotSin, moveAnimation,
 shotInfo, direction, magnitude, directionGuage, magnitudeGuage
 
 let court = new Court(canvasWidth, canvasHeight);
@@ -54,12 +56,6 @@ let shotEndBool = false;
 let hitTargetBool = false;
 let scoreBool = false;
 
-
-canvas.addEventListener("mousedown", grab);
-canvas.addEventListener("mouseup", release);
-canvas.addEventListener("touchstart", grab);
-canvas.addEventListener("touchend", release);
-reset.addEventListener("click", clearCourt);
 
 renderCourt();
 

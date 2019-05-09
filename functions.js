@@ -1,9 +1,19 @@
 function renderCourt() {
     hoop.draw();
     backboard.draw();
+
+    ball.x = ballX;
+    ball.y = ballY;
+    ball.startX = ball.x - ball.radius;
+    ball.offsetX = ball.x + ball.radius;
+    ball.startY = ball.y - ball.radius;
+    ball.offsetY = ball.y + ball.radius;
+
+
     ball.draw();
     target.draw();
     drawScore();
+    addListeners();
 };
 
 function reRenderCourt() {
@@ -14,13 +24,25 @@ function reRenderCourt() {
     drawScore();
     ball.x += dx;
     ball.y += dy;
+    ball.startX = ball.x - ball.radius;
+    ball.offsetX = ball.x + ball.radius;
+    ball.startY = ball.y - ball.radius;
+    ball.offsetY = ball.y + ball.radius;
     ball.draw();  
-
 };
 
+function addListeners(){
+    console.log('listen')
+    canvas.addEventListener("mousedown", grab);
+    canvas.addEventListener("mouseup", release);
+    canvas.addEventListener("touchstart", grab);
+    canvas.addEventListener("touchend", release);
+    reset.addEventListener("click", clearCourt);
+}
+
 function clearCourt() {
-    console.log('reset')
-    clearInterval(moveInterval);
+    console.log('reset');
+    clearInterval(moveAnimation);
     ctx.clearRect(0,0, canvasWidth, canvasHeight);
     ball.x = ballX;
     ball.y = ballY;
@@ -49,10 +71,9 @@ function release() {
     if(shotStartBool) {
         shotInfo = shotMath();
         shotStartBool = false;
-        shotBool = true;
         setVelocity(shotInfo)
         setTimeout(clearCourt, 2000);
-        moveInterval = setInterval(moveBall, 1);
+        moveAnimation = setInterval(moveBall, 10);
     };  
 };
 
@@ -73,8 +94,8 @@ function setVelocity(shotInfo) {
     direction = shotInfo[0];
     magnitude = shotInfo[1];
 
-    dx = 5;
-    dy = -5;
+    dx = startDx;
+    dy = startDy;
 
 
     if(direction < .1 && direction > -.1) {
@@ -102,29 +123,23 @@ function moveBall(){
     if(ball.x >= canvasWidth) {
         dx =  0 - dx;
     }
-    else if(ball.y >= canvasWidth) {
+    if(ball.y >= canvasWidth) {
         dy = 0 - dy; 
     }
-    else if(ball.x <= 0) {
+    if(ball.x <= 0) {
         dx = Math.abs(dx);
     }
    
-    else if(ball.y <= 0) {
+    if(ball.y <= 0) {
        dy = Math.abs(dy);
     }
 
-    hitTarget();
-
-    if(hitRim()) {
-        if(dy < 0){
-            dy= Math.abs(dy);
-        }
-        else {
-            dy= 0-dy;
-        }
+    if(hitRimLeft() || hitRimRight()) {
+        dy= 0-dy;
+        console.log('rim')
     }
 
-    else if(madeBasket()){
+    if(madeBasket()){
         console.log("bucket");
         score++;
         setTimeout(clearCourt, 500);
@@ -133,19 +148,36 @@ function moveBall(){
 };  
 
 function madeBasket() {
-    return (hitTargetBool && ball.y >= (hoop.y - ball.radius) && (ball.y < (hoop.y)) && 
-    (dy >= 0) && (ball.startX > hoop.x + 10) && (ball.offsetX < hoop.offsetX-10)) 
+    console.log(ball.startY)
+   if(dy < 0) {console.log("fire1"); return false;}
+   if(ball.x < hoop.x) {console.log("fire2"); return false; }
+   if(ball.x > hoop.offsetX) { console.log("fire3"); return false;}
+   if(ball.startY <= hoop.y && ball.offsetY >= hoop.y) return true;
+   else{ console.log("fire4");return false;}
 };
 
-function hitRim() {
-    return ((ball.y <=  hoop.y+3 && dy >= 0 && ball.x >= hoop.x && ball.x <= hoop.x+10)
-       || (ball.y <=  hoop.y+3 && dy >= 0 && ball.x >= hoop.offsetX - 10 && ball.x <= hoop.offsetX));
+
+function hitRimLeft() {
+   if(dy < 0) return false;
+   let a = hoop.x - ball.x;
+   if(a < 0) return false;
+   let b = hoop.y  - ball.y;
+   if(a < 0) return false;
+   let c = Math.sqrt(Math.pow(a,2)* Math.pow(b,2));
+   if(c <= ball.radius) return true;
+   else return false; 
+};
+function hitRimRight() {
+   if(dy < 0) return false;
+   let a = hoop.offsetX - ball.x;
+   if(a > 0) return false;
+   let b = hoop.y  - ball.y;
+   if(a < 0) return false;
+   let c = Math.sqrt(Math.pow(a,2)* Math.pow(b,2));
+   if(c <= ball.radius) return true;
+   else return false; 
 };
 
-function hitTarget() {
-    hitTargetBool = (ball.x >= target.x && ball.x < target.offsetX && ball.y > target.y && ball.y < target.offsetY && dy > 0);
-    console.log(hitTargetBool)
-};
 
 
 

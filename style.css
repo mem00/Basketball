@@ -1,15 +1,15 @@
 #court {
     display: block;
-    border: 1px;
+    border: 1px whitesmoke solid;
     margin: 2px auto;
 }
 
 body {
     display: block;
-    background-image: url(neven-krcmarek-175845-unsplash.jpg);
+    background-image: url(jeremy-thomas-98201-unsplash.jpg);
     background-position: center;
     background-repeat: no-repeat;
-    background-size: 70%;
+    background-size: 100%;
     background-color: black;
 
     font-family: 'Luckiest Guy', cursive;
@@ -23,12 +23,14 @@ h1 {
 
 }
 
-p{
+p {
     margin-top: 0;
     margin-bottom: 0;
+    font-family: 'Baloo Bhai', cursive;
+    font-size: 20px;
 }
 
-#reset{
+#reset {
     padding: 10px;
     font-size: large;
     font-family: 'Luckiest Guy', cursive;
@@ -36,4 +38,40 @@ p{
     margin-top: 0;
     background-color: white;
     color: black;
+}
+
+.one {
+    color: gold;
+}
+
+.two {
+    color: red;
+}
+
+.three {
+    color: lightblue;
+}
+
+.four {
+    color: green;
+}
+
+.five {
+    color: royalblue;
+}
+
+.six {
+    color: orange;
+}
+
+.seven {
+    color: pink;
+}
+
+.eight {
+    color: purple;
+}
+
+.nine {
+    color: yellowgreen;
 }

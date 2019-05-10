@@ -1,5 +1,5 @@
 class Court {
-    constructor(width, height) {  
+    constructor(width, height) {
         canvas.width = width;
         canvas.height = height;
         canvas.id = "court"
@@ -9,7 +9,7 @@ class Court {
 }
 
 class Hoop {
-    constructor(x, y, width) { 
+    constructor(x, y, width) {
         this.x = x;
         this.y = y;
         this.offsetX = x + width;
@@ -34,16 +34,16 @@ class Backboard {
         this.offsetY = y + height;
         this.width = width;
         this.height = height;
-        }
-        draw() {
-            ctx.beginPath();
-            ctx.strokeStyle = "white";
-   
-            ctx.lineWidth = 1;
-        
-            ctx.strokeRect(this.x, this.y, this.width, this.height);
-            ctx.closePath();
-        }
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.strokeStyle = "white";
+
+        ctx.lineWidth = 1;
+
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        ctx.closePath();
+    }
 }
 
 class Ball {
@@ -60,26 +60,25 @@ class Ball {
         this.dy = 0;
         this.startAngle = startAngle;
         this.endAngle = endAngle;
-        }
-        draw() { 
-            ctx.fillStyle = "orange";
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle);
-            ctx.closePath();
-            ctx.fill();
-        }
-
+    }
+    draw() {
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle);
+        ctx.closePath();
+        ctx.fill();
+    }
 }
 
 class Shot {
-    constructor(x,y) {
+    constructor(x, y) {
         this.x = x;
         this.y = y;
     }
 }
 
- class Target {
-     constructor(x, y, width, height) {
+class Target {
+    constructor(x, y, width, height) {
         this.x = x;
         this.y = y;
         this.offsetX = x + width;
@@ -96,4 +95,4 @@ class Shot {
         ctx.strokeRect(this.x, this.y, this.width, this.height);
         ctx.closePath();
     }
- }
+}
